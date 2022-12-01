@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sgrebnov/cordova-plugin-background-download.git"
+    "url": "git+https://github.com/lancard/cordova-plugin-background-download.git"
   },
   "keywords": [
     "cordova",
@@ -31,7 +31,7 @@
   "author": "Sergey Grebnov",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/sgrebnov/cordova-plugin-background-download/issues"
+    "url": "https://github.com/lancard/cordova-plugin-background-download/issues"
   },
-  "homepage": "https://github.com/sgrebnov/cordova-plugin-background-download#readme"
+  "homepage": "https://github.com/lancard/cordova-plugin-background-download#readme"
 }
