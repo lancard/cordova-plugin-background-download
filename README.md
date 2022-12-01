@@ -8,7 +8,7 @@ API provides an advanced file download functionality that persists beyond app te
             uriString = "http://media.ch9.ms/ch9/8c03/f4fe2512-59e5-4a07-bded-124b06ac8c03/PointerEventsCordovaPlugin.wmv";
         
         // open target file for download
-        window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dirEntry) {
+        window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dirEntry) {
             dirEntry.getFile(fileName, { create: true }, function (targetFile) {
                 
                 var onSuccess, onError, onProgress; // plugin callbacks to track operation execution status and progress
