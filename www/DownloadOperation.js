@@ -26,7 +26,7 @@ var exec = require('cordova/exec'),
  * Performs an asynchronous download operation in the background.
  *
  * @param {string} uri The location of the resource.
- * @param {string} resultFile The file that the response will be written to.
+ * @param {string} resultFileUri The file that the response will be written to.
  * @param {string} uriMatcher The regexp to compare location of the resources with already downloading ones.
  * @param {string} notificationTitle The title for downloading in notification.
  */
