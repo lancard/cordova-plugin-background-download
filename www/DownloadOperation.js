@@ -32,7 +32,7 @@ var exec = require('cordova/exec'),
  */
 var DownloadOperation = function (uri, resultFileUri, uriMatcher, notificationTitle) {
 
-    if (uri == null || resultFile == null) {
+    if (uri == null || resultFileUri == null) {
         throw new Error("missing or invalid argument");
     }
     
