@@ -35,11 +35,11 @@ var BackgroundDownloader = function(uriMatcher) {
  * Initializes a DownloadOperation object that contains the specified Uri and the file that the response is written to.
  *
  * @param {string} uri The location of the resource.
- * @param {File} resultFile The file that the response will be written to.
+ * @param {string} resultFileUri The file that the response will be written to.
  * @param {string} notificationTitle The title for downloading in notification.
  */
-BackgroundDownloader.prototype.createDownload = function(uri, resultFile, notificationTitle) {
-    return new DownloadOperation(uri, resultFile, this.uriMatcher, notificationTitle);
+BackgroundDownloader.prototype.createDownload = function(uri, resultFileUri, notificationTitle) {
+    return new DownloadOperation(uri, resultFileUri, this.uriMatcher, notificationTitle);
 };
 
 module.exports = BackgroundDownloader;
