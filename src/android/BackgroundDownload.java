@@ -37,26 +37,24 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.PermissionHelper;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
-import android.util.SparseArray;
 
 /**
  * Based on DownloadManager which is intended to be used for long-running HTTP downloads. Support of Android 2.3. (API 9) and later
  * http://developer.android.com/reference/android/app/DownloadManager.html TODO: concurrent downloads support
  */
 
+@SuppressLint("Range")
 public class BackgroundDownload extends CordovaPlugin {
 
     private static final String TAG = "BackgroundDownload";
@@ -66,17 +64,6 @@ public class BackgroundDownload extends CordovaPlugin {
     private static final long DOWNLOAD_ID_UNDEFINED = -1;
     private static final long DOWNLOAD_PROGRESS_UPDATE_TIMEOUT = 500;
     private static final int BUFFER_SIZE = 16777216; //16MB
-
-    private static class PermissionsRequest {
-
-        private final JSONArray rawArgs;
-        private final CallbackContext callbackContext;
-
-        private PermissionsRequest(JSONArray rawArgs, CallbackContext callbackContext) {
-            this.rawArgs = rawArgs;
-            this.callbackContext = callbackContext;
-        }
-    }
 
     private static class Download {
 
@@ -185,8 +172,6 @@ public class BackgroundDownload extends CordovaPlugin {
         }
     }
 
-    private SparseArray<PermissionsRequest> permissionRequests;
-
     private HashMap<String, Download> activeDownloads = new HashMap<>();
 
     private DownloadManager getDownloadManager() {
@@ -196,8 +181,6 @@ public class BackgroundDownload extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-
-        permissionRequests = new SparseArray<>();
     }
 
     @Override
@@ -219,10 +202,6 @@ public class BackgroundDownload extends CordovaPlugin {
     }
 
     private void startAsync(JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (!checkPermissions(args, callbackContext)) {
-            return;
-        }
-
         Download curDownload = Download.create(args, callbackContext);
 
         if (activeDownloads.containsKey(curDownload.getUriString())) {
@@ -513,35 +492,6 @@ public class BackgroundDownload extends CordovaPlugin {
                     ignore.printStackTrace();
                 }
             }
-        }
-    }
-
-    private boolean checkPermissions(JSONArray args, CallbackContext callbackContext) {
-        if (!PermissionHelper.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            permissionRequests.put(permissionRequests.size(), new PermissionsRequest(args, callbackContext));
-            PermissionHelper.requestPermission(this, permissionRequests.size() - 1, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            return false;
-        }
-
-        return true;
-    }
-
-    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
-        final PermissionsRequest permissionsRequest = permissionRequests.get(requestCode);
-        permissionRequests.remove(requestCode);
-        if (permissionsRequest == null) {
-            return;
-        }
-
-        if (grantResults.length < 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-            permissionsRequest.callbackContext.error("PERMISSION_DENIED");
-            return;
-        }
-
-        try {
-            startAsync(permissionsRequest.rawArgs, permissionsRequest.callbackContext);
-        } catch (JSONException ex) {
-            permissionsRequest.callbackContext.error(ex.getMessage());
         }
     }
 }
